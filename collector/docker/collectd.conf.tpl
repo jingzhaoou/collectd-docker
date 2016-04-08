@@ -5,19 +5,23 @@ Interval {{ COLLECTD_INTERVAL | default(10) }}
 Timeout 2
 ReadThreads 5
 
-LoadPlugin write_graphite
-<Plugin "write_graphite">
-    <Carbon>
-        Host "{{ GRAPHITE_HOST }}"
-        Port "{{ GRAPHITE_PORT | default("2003") }}"
-        Protocol "tcp"
-        Prefix "{{ GRAPHITE_PREFIX | default("collectd.") }}"
-        StoreRates true
-        EscapeCharacter "."
-        AlwaysAppendDS false
-        SeparateInstances true
-    </Carbon>
+<Plugin "csv">
+  DataDir "/srv/collectd/csv"
+  StoreRates true
 </Plugin>
+#LoadPlugin write_graphite
+#<Plugin "write_graphite">
+#    <Carbon>
+#        Host "{{ GRAPHITE_HOST }}"
+#        Port "{{ GRAPHITE_PORT | default("2003") }}"
+#        Protocol "tcp"
+#        Prefix "{{ GRAPHITE_PREFIX | default("collectd.") }}"
+#        StoreRates true
+#        EscapeCharacter "."
+#        AlwaysAppendDS false
+#        SeparateInstances true
+#    </Carbon>
+#</Plugin>
 
 LoadPlugin exec
 <Plugin exec>
