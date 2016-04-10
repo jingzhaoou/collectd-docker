@@ -1,6 +1,7 @@
 package collector
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
@@ -59,6 +60,7 @@ func (c *Collector) Run(interval int) error {
 	}
 
 	for e := range ch {
+		fmt.Println(e)
 		switch e.Status {
 		case "start", "restart":
 			go c.handle(e.ID)
@@ -69,7 +71,12 @@ func (c *Collector) Run(interval int) error {
 }
 
 func (c *Collector) handle(id string) {
-	m, err := NewMonitor(c.client, id, c.interval)
+	container, err := c.client.InspectContainer(id)
+	if (err != nil) { return }
+
+	name := fmt.Sprintf("%s:%s", id[:12], container.Name)
+
+	m, err := NewMonitor(c.client, id, name, c.interval)
 	if err != nil {
 		if err == ErrNoNeedToMonitor {
 			return

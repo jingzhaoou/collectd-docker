@@ -43,16 +43,18 @@ type Monitor struct {
 
 // NewMonitor creates new monitor with specified docker client,
 // container id and stat updating interval
-func NewMonitor(c MonitorDockerClient, id string, interval int) (*Monitor, error) {
+func NewMonitor(c MonitorDockerClient, id string, name string, interval int) (*Monitor, error) {
 	container, err := c.InspectContainer(id)
 	if err != nil {
 		return nil, err
 	}
 
-	app := sanitizeForGraphite(extractApp(container))
-	if app == "" {
-		return nil, ErrNoNeedToMonitor
-	}
+	app := name
+	// app := sanitizeForGraphite(extractApp(container))
+	// if app == "" {
+	// 	// return nil, ErrNoNeedToMonitor
+	// 	app = id
+	// }
 
 	task := sanitizeForGraphite(extractTask(container))
 
